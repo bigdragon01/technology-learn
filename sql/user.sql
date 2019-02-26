@@ -1,3 +1,4 @@
+create DATABASE  if not EXISTS SELkill;
 drop table if EXISTS user;
 CREATE TABLE `user` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
