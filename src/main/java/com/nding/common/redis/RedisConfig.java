@@ -25,11 +25,13 @@ public class RedisConfig {
         serializer.setObjectMapper(mapper);
         template.setDefaultSerializer(serializer);
         // 用于解决默认key和value序列化后会包含\xac\xed\x00\x05t\x00\t，例子key:\xac\xed\x00\x05t\x00\tuser_list，value: \xac\xed\x00\x05t\x00\tlidalong2
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
+        StringRedisSerializer strSerializer = new StringRedisSerializer();
+        template.setKeySerializer(strSerializer);
+        template.setValueSerializer(strSerializer);
 
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        // hash key和value可能不是字符串，这个要根据需要设置。当前配置为所有地方的key和value都按字符串处理
+        template.setHashKeySerializer(strSerializer);
+        template.setHashValueSerializer(strSerializer);
         template.afterPropertiesSet();
         return template;
     }
