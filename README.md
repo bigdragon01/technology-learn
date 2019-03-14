@@ -7,5 +7,8 @@ Java技术学习，尝试新的技术demo，Spring Boot
 mysql，新建一个数据库seckill。执行sql路径sql/user.sql
 
 
+运行时打印GC日志，增加jvm参数：-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC
+
+
 
 
