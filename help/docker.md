@@ -102,3 +102,28 @@ sha256:b1e8850a2b94403d712643d2a2cedb31956a1e1f211d9793410ee5e9547aa7eb   9 days
 <missing>                                                                 9 days ago          /bin/sh -c groupadd -r redis && useradd -r -g redis redis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         329kB               
 <missing>                                                                 9 days ago          /bin/sh -c #(nop)  CMD ["bash"]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0B                  
 <missing>                                                                 9 days ago          /bin/sh -c #(nop) ADD file:5ea7dfe8c8bc87ebe0d06d275bce41e015310bdfc04546246302e9ce07ee416c in /                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  55.3MB              
+
+workdir设置的是命令执行的路径
+编辑Dockerfile，在对应目录下docker build --no-cache -t redis:nding_v1 .  
+docker exec -i -t redis:nding_v1 /bin/sh，可以进入容器，查看目录结构
+docker run， -p 6379:6379 -v /tmp/redis:/tmp/redis  前面为宿主机的，后面为容器的，-p设置端口映射，不设置情况对expose的端口，宿主机端口为随机的；通过docker port查看  
+-v 目录挂栽点。volume设置的为容器中的目录，宿主机的为生成的，路径为/var/lib/docker/volumes/4495de62484346a2ef120b95113593058c678ed64504534e31d48afd76017f4d/_data。通过docker inspect 查看Mounts
+
+redis镜像中docker-entrypoint.sh内容
+#!/bin/sh
+set -e
+
+# first arg is `-f` or `--some-option`
+# or first arg is `something.conf`
+if [ "${1#-}" != "$1" ] || [ "${1%.conf}" != "$1" ]; then
+	set -- redis-server "$@"
+fi
+
+# allow the container to be started with `--user`
+if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
+	find . \! -user redis -exec chown redis '{}' +
+	exec gosu redis "$0" "$@"
+fi
+
+exec "$@"
+
