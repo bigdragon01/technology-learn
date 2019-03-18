@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy
 @ComponentScan(value = {"com.nding.common.redis","com.nding.learn"})
 @MapperScan("com.nding.learn.mapper")
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class LearnApplication {
 
 	public static void main(String[] args) {
